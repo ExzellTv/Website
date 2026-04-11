@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project | Cayden</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Space Grotesk', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            cream: '#FAF8F5',
+            sand: '#E8E4DE',
+            slate: {
+              900: '#0f172a',
+              800: '#1e293b',
+              700: '#334155',
+              600: '#475569',
+              500: '#64748b',
+              400: '#94a3b8',
+              300: '#cbd5e1',
+            },
+            sage: {
+              300: '#a3b18a',
+              400: '#7f9172',
+              500: '#588157',
+              600: '#3a5a40',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { cursor: default; }
+    a, button, [role="button"] { cursor: pointer; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: #FAF8F5;
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(135deg, #a3b18a 0%, #588157 100%);
+      top: -150px;
+      right: -100px;
+      animation: float-1 25s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 350px;
+      height: 350px;
+      background: linear-gradient(135deg, #E8E4DE 0%, #d4c8b8 100%);
+      bottom: -50px;
+      left: -100px;
+      animation: float-2 30s ease-in-out infinite;
+    }
+
+    @keyframes float-1 {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-40px, 30px); }
+    }
+
+    @keyframes float-2 {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(30px, -20px); }
+    }
+
+    .link-hover {
+      position: relative;
+    }
+    .link-hover::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: currentColor;
+      transition: width 0.3s ease;
+    }
+    .link-hover:hover::after {
+      width: 100%;
+    }
+
+    .lang-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid #E8E4DE;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .tech-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      background: white;
+      border: 1px solid #E8E4DE;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #475569;
+      transition: all 0.2s ease;
+    }
+    .tech-tag:hover {
+      border-color: #588157;
+      color: #588157;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <!-- Navigation -->
+  <nav class="fixed top-5 left-5 right-5 z-50">
+    <div class="max-w-4xl mx-auto px-5 py-3 bg-white/70 backdrop-blur-md rounded-full border border-sand/60 shadow-sm">
+      <div class="flex items-center justify-between">
+        <a href="index.html" class="text-sm font-medium tracking-wide text-slate-800 hover:text-sage-500 transition-colors">cayden</a>
+        <div class="flex items-center gap-6">
+          <a href="index.html#experience" class="text-sm text-slate-500 hover:text-slate-900 link-hover transition-colors">experience</a>
+          <a href="index.html#work" class="text-sm text-slate-500 hover:text-slate-900 link-hover transition-colors">work</a>
+          <a href="index.html#contact" class="text-sm text-slate-500 hover:text-slate-900 link-hover transition-colors">contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Back button -->
+  <div class="pt-24 px-6">
+    <div class="max-w-4xl mx-auto">
+      <a href="index.html#work" class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-700 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m15 18-6-6 6-6"/>
+        </svg>
+        Back to projects
+      </a>
+    </div>
+  </div>
+
+  <!-- Project Content -->
+  <main class="py-12 px-6">
+    <div class="max-w-4xl mx-auto">
+      <!-- Header -->
+      <div class="mb-12 project-header" id="project-header">
+        <div class="text-slate-400 text-sm mb-4">Loading...</div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 project-stats" id="project-stats">
+      </div>
+
+      <!-- Description -->
+      <div class="mb-12 project-description" id="project-description">
+      </div>
+
+      <!-- README -->
+      <div class="mb-12 project-readme" id="project-readme">
+      </div>
+
+      <!-- Links -->
+      <div class="flex flex-wrap gap-4 project-links" id="project-links">
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-8 px-6 border-t border-sand mt-20">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <span class="text-xs text-slate-400">&copy; 2026</span>
+      <span class="text-xs text-slate-400">crafted with care</span>
+    </div>
+  </footer>
+
+  <script>
+    const langColors = {
+      JavaScript: '#f1e05a',
+      TypeScript: '#3178c6',
+      Python: '#3572A5',
+      Java: '#b07219',
+      Swift: '#F05138',
+      HTML: '#e34c26',
+      CSS: '#563d7c',
+      Shell: '#89e051',
+      Go: '#00ADD8',
+      Rust: '#dea584',
+      GDScript: '#355570',
+      'Jupyter Notebook': '#DA5B0B',
+      'C++': '#f34b7d',
+      null: '#94a3b8'
+    };
+
+    const GITHUB_USERNAME = 'ExzellTv';
+
+    async function loadProject() {
+      // Get project name from URL query param
+      const params = new URLSearchParams(window.location.search);
+      const filename = params.get('name');
+
+      if (!filename) {
+        document.getElementById('project-header').innerHTML = `
+          <h1 class="text-3xl font-light text-slate-900 mb-2">No project specified</h1>
+          <p class="text-slate-500">Please select a project from the <a href="index.html#work" class="text-sage-500 hover:underline">projects page</a>.</p>
+        `;
+        return;
+      }
+
+      try {
+        // Fetch repo data
+        const repoRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${filename}`);
+        const repo = await repoRes.json();
+
+        if (repo.message === 'Not Found') {
+          document.getElementById('project-header').innerHTML = `
+            <h1 class="text-3xl font-light text-slate-900 mb-2">Project not found</h1>
+            <p class="text-slate-500">This project doesn't exist or has been removed.</p>
+          `;
+          return;
+        }
+
+        // Update page title
+        document.title = `${repo.name} | Cayden`;
+
+        // Header
+        document.getElementById('project-header').innerHTML = `
+          <div class="flex items-center gap-3 mb-4">
+            ${repo.language ? `
+              <span class="lang-dot" style="background: ${langColors[repo.language] || langColors.null}"></span>
+              <span class="text-sm text-slate-500">${repo.language}</span>
+            ` : ''}
+            <span class="text-slate-300">|</span>
+            <span class="text-sm text-slate-400">${new Date(repo.updated_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-light text-slate-900 mb-4">${repo.name}</h1>
+          <p class="text-lg text-slate-500 font-light">${repo.description || 'No description available'}</p>
+        `;
+
+        // Stats
+        document.getElementById('project-stats').innerHTML = `
+          <div class="stat-card">
+            <div class="text-2xl font-semibold text-slate-900">${repo.stargazers_count}</div>
+            <div class="text-xs uppercase tracking-wider text-sage-500 mt-1">Stars</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-2xl font-semibold text-slate-900">${repo.forks_count}</div>
+            <div class="text-xs uppercase tracking-wider text-sage-500 mt-1">Forks</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-2xl font-semibold text-slate-900">${repo.open_issues_count}</div>
+            <div class="text-xs uppercase tracking-wider text-sage-500 mt-1">Issues</div>
+          </div>
+          <div class="stat-card">
+            <div class="text-2xl font-semibold text-slate-900">${repo.size > 1000 ? (repo.size / 1000).toFixed(1) + 'MB' : repo.size + 'KB'}</div>
+            <div class="text-xs uppercase tracking-wider text-sage-500 mt-1">Size</div>
+          </div>
+        `;
+
+        // Fetch languages
+        const langRes = await fetch(repo.languages_url);
+        const languages = await langRes.json();
+        const langTotal = Object.values(languages).reduce((a, b) => a + b, 0);
+
+        if (Object.keys(languages).length > 0) {
+          document.getElementById('project-description').innerHTML = `
+            <h2 class="text-xs font-medium text-slate-400 tracking-widest uppercase mb-4">Technologies</h2>
+            <div class="flex flex-wrap gap-2">
+              ${Object.entries(languages).map(([lang, bytes]) => `
+                <span class="tech-tag">
+                  <span class="lang-dot mr-2" style="background: ${langColors[lang] || langColors.null}"></span>
+                  ${lang}
+                  <span class="ml-2 text-slate-400">${((bytes / langTotal) * 100).toFixed(1)}%</span>
+                </span>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        // Fetch README
+        try {
+          const readmeRes = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${filename}/readme`);
+          const readmeData = await readmeRes.json();
+
+          if (readmeData.content) {
+            const readmeContent = atob(readmeData.content);
+            // Simple markdown to HTML (basic)
+            const htmlContent = readmeContent
+              .replace(/^### (.*$)/gim, '<h3 class="text-lg font-medium text-slate-800 mt-6 mb-2">$1</h3>')
+              .replace(/^## (.*$)/gim, '<h2 class="text-xl font-medium text-slate-800 mt-8 mb-3">$1</h2>')
+              .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-medium text-slate-800 mt-8 mb-4">$1</h1>')
+              .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+              .replace(/\*(.*)\*/gim, '<em>$1</em>')
+              .replace(/`([^`]+)`/gim, '<code class="bg-sand/50 px-1.5 py-0.5 rounded text-sm">$1</code>')
+              .replace(/\n/gim, '<br>');
+
+            document.getElementById('project-readme').innerHTML = `
+              <h2 class="text-xs font-medium text-slate-400 tracking-widest uppercase mb-4">README</h2>
+              <div class="prose prose-slate max-w-none text-sm text-slate-600 leading-relaxed bg-white border border-sand rounded-xl p-6">
+                ${htmlContent}
+              </div>
+            `;
+          }
+        } catch (e) {
+          // No README, that's fine
+        }
+
+        // Links
+        document.getElementById('project-links').innerHTML = `
+          <a href="${repo.html_url}" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-full text-sm font-medium hover:bg-slate-800 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            View on GitHub
+          </a>
+          ${repo.homepage ? `
+            <a href="${repo.homepage}" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-700 rounded-full text-sm font-medium hover:border-sage-500 hover:text-sage-500 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" x2="21" y1="14" y2="3"/>
+              </svg>
+              Live Demo
+            </a>
+          ` : ''}
+        `;
+
+        // Animate in
+        gsap.from('.project-header', { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out' });
+        gsap.from('.project-stats .stat-card', { opacity: 0, y: 20, duration: 0.5, stagger: 0.1, delay: 0.2, ease: 'power2.out' });
+        gsap.from('.project-description', { opacity: 0, y: 20, duration: 0.5, delay: 0.4, ease: 'power2.out' });
+        gsap.from('.project-readme', { opacity: 0, y: 20, duration: 0.5, delay: 0.5, ease: 'power2.out' });
+        gsap.from('.project-links', { opacity: 0, y: 20, duration: 0.5, delay: 0.6, ease: 'power2.out' });
+
+      } catch (error) {
+        console.error('Failed to load project:', error);
+        document.getElementById('project-header').innerHTML = `
+          <h1 class="text-3xl font-light text-slate-900 mb-2">Error loading project</h1>
+          <p class="text-slate-500">Please try again later.</p>
+        `;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadProject);
+  </script>
+</body>
+</html>
