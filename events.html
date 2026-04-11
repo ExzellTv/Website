@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events | Cayden</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Space Grotesk', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            cream: '#FAF8F5',
+            sand: '#E8E4DE',
+            slate: {
+              900: '#0f172a',
+              800: '#1e293b',
+              700: '#334155',
+              600: '#475569',
+              500: '#64748b',
+              400: '#94a3b8',
+              300: '#cbd5e1',
+            },
+            sage: {
+              300: '#a3b18a',
+              400: '#7f9172',
+              500: '#588157',
+              600: '#3a5a40',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { cursor: default; }
+    a, button, [role="button"] { cursor: pointer; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      background: #FAF8F5;
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.12;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: linear-gradient(135deg, #a3b18a 0%, #588157 100%);
+      top: -150px;
+      right: -100px;
+      animation: float-1 25s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 350px;
+      height: 350px;
+      background: linear-gradient(135deg, #E8E4DE 0%, #d4c8b8 100%);
+      bottom: -50px;
+      left: -100px;
+      animation: float-2 30s ease-in-out infinite;
+    }
+
+    @keyframes float-1 {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-40px, 30px); }
+    }
+
+    @keyframes float-2 {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(30px, -20px); }
+    }
+
+    .link-hover {
+      position: relative;
+    }
+    .link-hover::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: currentColor;
+      transition: width 0.3s ease;
+    }
+    .link-hover:hover::after {
+      width: 100%;
+    }
+
+    .event-card {
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .event-card:hover {
+      transform: translateY(-4px);
+      border-color: #588157;
+      box-shadow: 0 10px 40px -10px rgba(88, 129, 87, 0.2);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-panel {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
+      background: #FAF8F5;
+      border: 1px solid #E8E4DE;
+      border-radius: 16px;
+      max-width: 640px;
+      width: calc(100% - 48px);
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      z-index: 101;
+      opacity: 0;
+      pointer-events: none;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+    .modal-panel.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border: 1px solid #E8E4DE;
+      border-radius: 50%;
+      background: #FAF8F5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .modal-close:hover {
+      border-color: #588157;
+      color: #588157;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: white;
+      border: 1px solid #E8E4DE;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #475569;
+    }
+
+    .type-hackathon { border-left: 3px solid #588157; }
+    .type-conference { border-left: 3px solid #64748b; }
+    .type-workshop { border-left: 3px solid #a3b18a; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <!-- Navigation -->
+  <nav class="fixed top-5 left-5 right-5 z-50">
+    <div class="max-w-4xl mx-auto px-5 py-3 bg-white/70 backdrop-blur-md rounded-full border border-sand/60 shadow-sm">
+      <div class="flex items-center justify-between">
+        <a href="index.html" class="text-sm font-medium tracking-wide text-slate-800 link-hover">cayden</a>
+        <div class="flex items-center gap-6">
+          <a href="index.html#experience" class="text-sm text-slate-500 hover:text-slate-900 link-hover transition-colors">experience</a>
+          <a href="index.html#work" class="text-sm text-slate-500 hover:text-slate-900 link-hover transition-colors">work</a>
+          <a href="events.html" class="text-sm text-sage-500 font-medium link-hover transition-colors">events</a>
+          <a href="index.html#contact" class="text-sm text-slate-500 hover:text-slate-900 link-hover transition-colors">contact</a>
+          <a href="resume.pdf" target="_blank" class="text-sm text-slate-500 hover:text-slate-900 link-hover transition-colors">resume</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <section class="pt-32 pb-12 px-6">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-4xl font-light text-slate-900 mb-4">Events</h1>
+      <p class="text-slate-500 text-lg">Hackathons, conferences, and other adventures.</p>
+    </div>
+  </section>
+
+  <!-- Events Grid -->
+  <section class="px-6 pb-24">
+    <div class="max-w-4xl mx-auto">
+      <div id="events-grid" class="grid md:grid-cols-2 gap-6">
+        <!-- Events will be populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div id="modal-overlay" class="modal-overlay"></div>
+  <div id="modal-panel" class="modal-panel">
+    <button id="modal-close" class="modal-close">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    <div id="modal-content" class="p-8"></div>
+  </div>
+
+  <script>
+    // Event data - customize with your events
+    const events = {
+      redbull2025: {
+        title: 'Red Bull Basement',
+        type: 'hackathon',
+        date: 'May 7-9, 2025',
+        location: 'Detroit, Michigan',
+        status: 'National Finalist',
+        image: null,
+        description: 'Selected as a National Finalist for the Red Bull Basement global innovation competition. Competing against teams from across the country to solve real-world problems through technology.',
+        highlights: [
+          'National Finalist out of hundreds of applicants',
+          'Pitched innovative solution to panel of judges',
+          'Networked with entrepreneurs and industry leaders'
+        ],
+        techStack: ['Python', 'React', 'AI/ML'],
+        links: {
+          devpost: null,
+          github: null,
+          website: 'https://www.redbull.com/us-en/event-series/red-bull-basement'
+        }
+      },
+      // Add more events here
+      hackutd2024: {
+        title: 'HackUTD',
+        type: 'hackathon',
+        date: 'November 2024',
+        location: 'Dallas, Texas',
+        status: 'Participant',
+        image: null,
+        description: 'Participated in one of the largest hackathons in Texas, building innovative solutions over 24 hours.',
+        highlights: [
+          'Built a full-stack application in 24 hours',
+          'Collaborated with a team of 4 developers',
+          'Presented project to industry judges'
+        ],
+        techStack: ['Next.js', 'Python', 'OpenAI API'],
+        links: {
+          devpost: null,
+          github: null,
+          website: null
+        }
+      },
+      tamuhack2024: {
+        title: 'TAMUhack',
+        type: 'hackathon',
+        date: 'January 2024',
+        location: 'College Station, Texas',
+        status: 'Participant',
+        image: null,
+        description: 'Competed at Texas A&M\'s annual hackathon, focusing on building impactful technology solutions.',
+        highlights: [
+          'Developed project from concept to demo',
+          'Learned new technologies under time pressure',
+          'Connected with sponsors and mentors'
+        ],
+        techStack: ['React', 'Node.js', 'MongoDB'],
+        links: {
+          devpost: null,
+          github: null,
+          website: null
+        }
+      }
+    };
+
+    function renderEvents() {
+      const grid = document.getElementById('events-grid');
+
+      Object.entries(events).forEach(([id, event], index) => {
+        const typeClass = `type-${event.type}`;
+        const card = document.createElement('div');
+        card.className = `event-card bg-white/60 border border-sand/60 rounded-xl p-6 ${typeClass}`;
+        card.dataset.event = id;
+        card.innerHTML = `
+          <div class="flex items-start justify-between mb-4">
+            <span class="text-xs font-medium text-sage-500 uppercase tracking-wider">${event.type}</span>
+            <span class="text-xs text-slate-400">${event.date}</span>
+          </div>
+          <h3 class="text-xl font-medium text-slate-900 mb-2">${event.title}</h3>
+          <p class="text-sm text-slate-500 mb-4">${event.location}</p>
+          ${event.status ? `<span class="inline-block px-3 py-1 bg-sage-500/10 text-sage-600 text-xs rounded-full">${event.status}</span>` : ''}
+          <div class="mt-4 flex items-center text-xs text-slate-400">
+            <span>click to view details</span>
+            <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </div>
+        `;
+
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        grid.appendChild(card);
+
+        gsap.to(card, {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          delay: index * 0.1,
+          ease: 'power2.out'
+        });
+      });
+    }
+
+    function openModal(eventId) {
+      const event = events[eventId];
+      if (!event) return;
+
+      const content = document.getElementById('modal-content');
+      content.innerHTML = `
+        <div class="mb-6">
+          <span class="text-xs font-medium text-sage-500 uppercase tracking-wider">${event.type}</span>
+          <h2 class="text-2xl font-medium text-slate-900 mt-2">${event.title}</h2>
+          <p class="text-slate-500 mt-1">${event.location} · ${event.date}</p>
+          ${event.status ? `<span class="inline-block mt-3 px-3 py-1 bg-sage-500/10 text-sage-600 text-sm rounded-full">${event.status}</span>` : ''}
+        </div>
+
+        <p class="text-slate-600 mb-6 leading-relaxed">${event.description}</p>
+
+        ${event.highlights && event.highlights.length > 0 ? `
+          <div class="mb-6">
+            <h3 class="text-sm font-medium text-slate-900 mb-3">Highlights</h3>
+            <ul class="space-y-2">
+              ${event.highlights.map(h => `
+                <li class="flex items-start gap-2 text-sm text-slate-600">
+                  <svg class="w-4 h-4 text-sage-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  ${h}
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        ` : ''}
+
+        ${event.techStack && event.techStack.length > 0 ? `
+          <div class="mb-6">
+            <h3 class="text-sm font-medium text-slate-900 mb-3">Technologies</h3>
+            <div class="flex flex-wrap gap-2">
+              ${event.techStack.map(tech => `<span class="tag">${tech}</span>`).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        ${(event.links.devpost || event.links.github || event.links.website) ? `
+          <div class="pt-4 border-t border-sand/60">
+            <h3 class="text-sm font-medium text-slate-900 mb-3">Links</h3>
+            <div class="flex flex-wrap gap-3">
+              ${event.links.devpost ? `
+                <a href="${event.links.devpost}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white text-sm rounded-lg hover:bg-slate-800 transition-colors">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M6.002 1.61L0 12.004L6.002 22.39h11.996L24 12.004L17.998 1.61H6.002zm1.593 4.084h3.947c3.605 0 6.276 1.695 6.276 6.31c0 4.436-3.21 6.302-6.456 6.302H7.595V5.694zm2.517 2.449v7.714h1.241c2.646 0 3.862-1.55 3.862-3.861c.009-2.569-1.096-3.853-3.767-3.853h-1.336z"/></svg>
+                  Devpost
+                </a>
+              ` : ''}
+              ${event.links.github ? `
+                <a href="${event.links.github}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white text-sm rounded-lg hover:bg-slate-800 transition-colors">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                  GitHub
+                </a>
+              ` : ''}
+              ${event.links.website ? `
+                <a href="${event.links.website}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 border border-slate-300 text-slate-700 text-sm rounded-lg hover:border-sage-500 hover:text-sage-600 transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                  </svg>
+                  Website
+                </a>
+              ` : ''}
+            </div>
+          </div>
+        ` : ''}
+      `;
+
+      document.getElementById('modal-overlay').classList.add('active');
+      document.getElementById('modal-panel').classList.add('active');
+
+      gsap.fromTo('#modal-panel',
+        { scale: 0.95, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.3, ease: 'power2.out' }
+      );
+    }
+
+    function closeModal() {
+      gsap.to('#modal-panel', {
+        scale: 0.95,
+        opacity: 0,
+        duration: 0.2,
+        ease: 'power2.in',
+        onComplete: () => {
+          document.getElementById('modal-overlay').classList.remove('active');
+          document.getElementById('modal-panel').classList.remove('active');
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderEvents();
+
+      document.getElementById('events-grid').addEventListener('click', (e) => {
+        const card = e.target.closest('.event-card');
+        if (card) {
+          openModal(card.dataset.event);
+        }
+      });
+
+      document.getElementById('modal-close').addEventListener('click', closeModal);
+      document.getElementById('modal-overlay').addEventListener('click', closeModal);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+      });
+    });
+  </script>
+
+  <!-- Vercel Speed Insights -->
+  <script>
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+</body>
+</html>
